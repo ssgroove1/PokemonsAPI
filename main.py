@@ -59,12 +59,12 @@ def info(message):
     if message.from_user.username in Pokemon.pokemons.keys():
         pok = Pokemon.pokemons[message.from_user.username] # Покемон от игрока
         
-        if isinstance(pok, Pokemon):
-            bot.send_message(message.chat.id, f'Класс вашего покемона: Стандартный')
+        if isinstance(pok, Fighter):
+            bot.send_message(message.chat.id, f'Класс вашего покемона: Боец')
         elif isinstance(pok, Wizzard):
             bot.send_message(message.chat.id, f'Класс вашего покемона: Маг')
         else:
-            bot.send_message(message.chat.id, f'Класс вашего покемона: Боец')
+            bot.send_message(message.chat.id, f'Класс вашего покемона: Стандартный')
 
         if pok.get_weight() >= 1000:
             bot.send_message(message.chat.id, f"{pok.info()}\nУ вас <b>ЛЕГЕНДАРНЫЙ</b> покемон!", parse_mode='HTML')
@@ -77,9 +77,8 @@ def info(message):
             bot.send_message(message.chat.id, f'{pok.info()}\nУ вас <b>ОБЫЧНЫЙ</b> покемон!', parse_mode='HTML')
             bot.send_video(message.chat.id, pok.show_img())
 
-        
+        #bot.send_message(message.chat.id, message.from_user.username)
         bot.send_message(message.chat.id, f'{pok.show_ability()}\n{pok.show_weight()}')
-        print(message.from_user.username)
     else:
         bot.send_message(message.chat.id, "Создайте вашего покемона!")
 
