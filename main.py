@@ -25,12 +25,14 @@ def go(message):
         if pokemon.get_weight() >= 1000:
             pokemon.power += randint(45,95)
             pokemon.hp += randint(95,225)
+
             bot.send_message(message.chat.id, f"{pokemon.info()}\nВам выпал <b>ЛЕГЕНДАРНЫЙ</b> покемон!", parse_mode='HTML')
             bot.send_video(message.chat.id, pokemon.show_shiny_img())
 
         elif pokemon.get_weight() >= 500 and pokemon.get_weight() < 1000:
             pokemon.power += randint(25,45)
-            pokemon.hp += randint(65,85)
+            pokemon.hp += randint(65,105)
+
             bot.send_message(message.chat.id, f"{pokemon.info()}\nВам выпал <b>РЕДКИЙ</b> покемон!", parse_mode='HTML')
             bot.send_video(message.chat.id, pokemon.show_img())
         else:
@@ -41,15 +43,14 @@ def go(message):
     else:
         bot.reply_to(message, "Ты уже создал себе покемона")
 
-#@bot.message_handler(commands=['feed'])
-#def feed(message):
-#    pokemon = Pokemon(message.from_user.username)
-#    pokemon = Wizzard(message.from_user.username)
-#    pokemon = Fighter(message.from_user.username)
-#    if message.from_user.username not in Pokemon.pokemons.keys():
-#        bot.send_message(message.chat.id, f"У вас нету покемона!")
-#    else:
-#        bot.send_message(message.chat.id, f"{pokemon.tofeed()}")
+
+@bot.message_handler(commands=['feed'])
+def feed(message):
+    if message.from_user.username in Pokemon.pokemons.keys():
+        pok = Pokemon.pokemons[message.from_user.username]
+        bot.send_message(message.chat.id, f"{pok.feed()}")
+    else:
+        bot.reply_to(message, "Создайте вашего покемона!")
 
 
 
@@ -77,7 +78,6 @@ def info(message):
             bot.send_message(message.chat.id, f'{pok.info()}\nУ вас <b>ОБЫЧНЫЙ</b> покемон!', parse_mode='HTML')
             bot.send_video(message.chat.id, pok.show_img())
 
-        #bot.send_message(message.chat.id, message.from_user.username)
         bot.send_message(message.chat.id, f'{pok.show_ability()}\n{pok.show_weight()}')
     else:
         bot.send_message(message.chat.id, "Создайте вашего покемона!")

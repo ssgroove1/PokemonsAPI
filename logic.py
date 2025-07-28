@@ -1,4 +1,5 @@
 from random import randint
+from datetime import datetime, timedelta
 import requests
 
 class Pokemon:
@@ -16,6 +17,10 @@ class Pokemon:
         self.weight = self.get_weight()
 
         self.poklevels = 1
+
+        # Атрибут последней комрешки
+        time_now = datetime.now()
+        self.last_feed_time = time_now.replace(microsecond=0)
 
         self.randomhp = randint(200,400)
         self.hp = self.randomhp
@@ -77,7 +82,7 @@ class Pokemon:
     # Метод класса для получения информации
     def info(self):
         data = (
-            f"Имя вашего покемона: {self.name}\n"
+            f"Покемон игрока: {self.name}\n"
             f"Сила покемона: {self.power}\n"
             f"Здоровье покемона: {self.hp}\n"
             f"Уровень покемона: {self.poklevels}"
@@ -121,13 +126,17 @@ class Pokemon:
         
 
     # Метод комрления
-    #def tofeed(self):
-    #    if self.poklevels >= 100:
-    #        return f"Ваш покемон достиг максимального уровня!\nУровень вашего покемона: {self.poklevels}"
-    #    else:
-    #        f = self.poklevels + randint(2,7)
-    #        print(f)
-    #        return f"Вы покормили вашего покемона!\nНовый уровень вашего покемона: {self.poklevels}"
+    def feed(self, feed_interval=20, hp_increase=20):
+        now_time = datetime.now()
+        current_time = now_time.replace(microsecond=0)
+        delta_time = timedelta(seconds=feed_interval)
+        if (current_time - self.last_feed_time) > delta_time:
+            self.hp += hp_increase
+            self.last_feed_time = current_time
+            return f"Здоровье покемона увеличено. Текущее здоровье: {self.hp}"
+        else:
+            return f"Следующее время кормления покемона: {self.last_feed_time+delta_time}"
+
 
 
 class Wizzard(Pokemon):
@@ -143,6 +152,9 @@ class Wizzard(Pokemon):
         else:
             result = super().attack(enemy)
             return result
+        
+    def feed(self):
+        return super().feed(hp_increase=30)
 
 class Fighter(Pokemon):
     def attack(self, enemy):
@@ -157,7 +169,9 @@ class Fighter(Pokemon):
         else:
             result = super().attack(enemy)
             return result
-
+        
+    def feed(self):
+        return super().feed(feed_interval=10)
 
 
 #if __name__ == '__main__':
